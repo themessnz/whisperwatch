@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-multipart
+jinja2
+watchdog
+faster-whisper
+pyyaml
+pydantic
+python-dotenv

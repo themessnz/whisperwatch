@@ -1,0 +1,29 @@
+watchKey:
+  paths:
+    - /workspace/media
+  extensions:
+    - .mp3
+    - .wav
+    - .mp4
+    - .mkv
+    - .mov
+    - .m4a
+  stability_check_seconds: 5
+
+model:
+  name: base
+  device: cpu
+  compute_type: int8
+
+transcription:
+  language: null
+  beam_size: 5
+  timestamp_granularity: segment
+
+output:
+  output_dir: /workspace/transcripts
+  formats:
+    - json
+    - txt
+    - srt
+    - vtt
