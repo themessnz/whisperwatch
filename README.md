@@ -51,5 +51,4 @@ Configuration is stored in `config/config.yaml`. You can also modify settings vi
 - `storage/`: SQLite database for job tracking.
 
 ## License
-
-MIT
+GPLv3
