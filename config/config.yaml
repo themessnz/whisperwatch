@@ -1,0 +1,26 @@
+model:
+  compute_type: int8
+  device: cpu
+  name: tiny
+output:
+  formats:
+  - json
+  - txt
+  - srt
+  - vtt
+  output_dir: /workspace/transcripts
+transcription:
+  beam_size: 5
+  language: null
+  timestamp_granularity: segment
+watchKey:
+  extensions:
+  - .mp3
+  - .wav
+  - .mp4
+  - .mkv
+  - .mov
+  - .m4a
+  paths:
+  - /workspace/media
+  stability_check_seconds: 5

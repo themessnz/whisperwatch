@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WhisperWatch Settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">WhisperWatch</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Jobs</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/settings">Settings</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h3>Configuration</h3>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">Model Settings</div>
+                <div class="card-body">
+                    <form id="modelForm">
+                        <div class="mb-3">
+                            <label class="form-label">Model Name</label>
+                            <select class="form-select" name="name" id="modelName">
+                                <option value="tiny">tiny</option>
+                                <option value="base">base</option>
+                                <option value="small">small</option>
+                                <option value="medium">medium</option>
+                                <option value="large-v3">large-v3</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Device</label>
+                            <select class="form-select" name="device" id="modelDevice">
+                                <option value="cpu">CPU</option>
+                                <option value="cuda">CUDA (GPU)</option>
+                            </select>
+                        </div>
+                         <div class="mb-3">
+                            <label class="form-label">Compute Type</label>
+                            <select class="form-select" name="compute_type" id="modelCompute">
+                                <option value="int8">int8</option>
+                                <option value="float16">float16</option>
+                                <option value="int8_float16">int8_float16</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Model Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+           <div class="card">
+               <div class="card-header">Current Config Dump</div>
+               <div class="card-body">
+                   <pre id="configDump" class="bg-light p-2 border rounded"></pre>
+               </div>
+           </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function loadConfig() {
+        const res = await fetch('/api/config/models');
+        const data = await res.json();
+        
+        document.getElementById('modelName').value = data.current.name;
+        document.getElementById('modelDevice').value = data.current.device;
+        document.getElementById('modelCompute').value = data.current.compute_type;
+        
+        const fullRes = await fetch('/api/config');
+        const fullData = await fullRes.json();
+        document.getElementById('configDump').textContent = JSON.stringify(fullData, null, 2);
+    }
+    
+    document.getElementById('modelForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const jsonData = {};
+        formData.forEach((value, key) => jsonData[key] = value);
+        
+        const res = await fetch('/api/config/model', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(jsonData)
+        });
+        
+        if (res.ok) {
+            alert('Settings Saved! The next job will use the new settings.');
+            loadConfig();
+        } else {
+            alert('Error saving settings');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', loadConfig);
+</script>
+
+</body>
+</html>

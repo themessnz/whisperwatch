@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  whisperwatch:
+    build: .
+    image: whisperwatch:latest
+    container_name: whisperwatch
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config:/app/config
+      - ./media:/app/media
+      - ./transcripts:/app/transcripts
+      - ./logs:/app/logs
+    # Device mapping for GPU support (uncomment if NVIDIA runtime is available)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
